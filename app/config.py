@@ -11,9 +11,9 @@ class Config:
 
     # Use psycopg v3 (installed in your venv)
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL",
-        "postgresql+psycopg://postgres:postgres@localhost:5432/customer_management",
-    )
+    "DATABASE_URL",
+    "postgresql+psycopg://postgres.wdklitvjtpnlenpkwjjv:Dhana%403162026@aws-1-ap-south-1.pooler.supabase.com:6543/postgres",
+)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_SORT_KEYS = False
