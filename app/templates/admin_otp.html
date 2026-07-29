@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify Code — Agentic Atoms</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32.png') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-auth-body">
+  <main class="admin-auth-card" role="main">
+    <div class="logo-row admin-auth-logo">
+      <div class="logo-placeholder atom-logo" aria-hidden="true">
+      <img src="{{ url_for('static', filename='images/agentic-atoms-mark.png') }}" alt="" class="logo-img">
+    </div>
+      <div class="brand-mark">Agentic<span>Atoms</span></div>
+    </div>
+    <h1>Enter Verification Code</h1>
+    <p class="admin-auth-sub">We've emailed a 6-digit code to the account on file. It expires in 10 minutes.</p>
+
+    {% if error %}
+      <div class="banner show error" role="alert">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('admin.verify_otp') }}" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="otp_code">Verification code</label>
+        <input type="text" id="otp_code" name="otp_code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required autofocus>
+      </div>
+      <button type="submit" class="submit-btn">Verify &amp; Sign In</button>
+    </form>
+    <p class="admin-auth-note">Didn't get a code? Go back and sign in again to request a new one.</p>
+  </main>
+</body>
+</html>

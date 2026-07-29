@@ -1,0 +1,113 @@
+{
+  "info": {
+    "name": "Customer Management System API",
+    "description": "REST API for the Customer Management System (Flask + PostgreSQL). Import this into Postman, set the `base_url` collection variable, and run requests top to bottom to see every duplicate-validation scenario in action.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:5000" },
+    { "key": "customer_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "1. Create customer (success)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/api/customers",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_name\": \"Jane Doe\",\n  \"customer_role\": \"Owner\",\n  \"phone_number\": \"5551234567\",\n  \"email\": \"jane@example.com\",\n  \"business_name\": \"Doe Dental\",\n  \"specialty\": \"Dental\",\n  \"locations\": 2,\n  \"pain_point\": \"Too many missed calls\",\n  \"daily_calls\": 45,\n  \"interested_service\": \"ARIA AI\",\n  \"additional_notes\": \"Currently using a basic answering service.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "2. Create customer - missing required fields (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/api/customers",
+        "body": { "mode": "raw", "raw": "{}" }
+      }
+    },
+    {
+      "name": "3. Create customer - duplicate phone, different email (409)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/api/customers",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_name\": \"J. Doe\",\n  \"phone_number\": \"5551234567\",\n  \"email\": \"different@example.com\",\n  \"business_name\": \"Doe Dental\",\n  \"specialty\": \"Dental\",\n  \"pain_point\": \"Appointment scheduling\",\n  \"interested_service\": \"AI Chatbot\"\n}"
+        }
+      }
+    },
+    {
+      "name": "4. Create customer - duplicate email, different phone (409)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/api/customers",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_name\": \"J. Doe\",\n  \"phone_number\": \"5559998888\",\n  \"email\": \"jane@example.com\",\n  \"business_name\": \"Doe Dental\",\n  \"specialty\": \"Dental\",\n  \"pain_point\": \"Appointment scheduling\",\n  \"interested_service\": \"AI Chatbot\"\n}"
+        }
+      }
+    },
+    {
+      "name": "5. Create customer - same phone AND email (409)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/api/customers",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_name\": \"Jane Doe\",\n  \"phone_number\": \"5551234567\",\n  \"email\": \"jane@example.com\",\n  \"business_name\": \"Doe Dental\",\n  \"specialty\": \"Dental\",\n  \"pain_point\": \"Too many missed calls\",\n  \"interested_service\": \"ARIA AI\"\n}"
+        }
+      }
+    },
+    {
+      "name": "6. List customers (search + filter + pagination)",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/customers?page=1&per_page=10&search=Doe&specialty=Dental"
+      }
+    },
+    {
+      "name": "7. Get customer by ID",
+      "request": { "method": "GET", "url": "{{base_url}}/api/customers/{{customer_id}}" }
+    },
+    {
+      "name": "8. Update customer",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/api/customers/{{customer_id}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_name\": \"Jane A. Doe\",\n  \"phone_number\": \"5551234567\",\n  \"email\": \"jane@example.com\",\n  \"business_name\": \"Doe Dental\",\n  \"specialty\": \"Dental\",\n  \"pain_point\": \"Staff shortage\",\n  \"interested_service\": \"Both\"\n}"
+        }
+      }
+    },
+    {
+      "name": "9. Delete customer (soft delete)",
+      "request": { "method": "DELETE", "url": "{{base_url}}/api/customers/{{customer_id}}" }
+    },
+    {
+      "name": "10. Delete customer (hard delete)",
+      "request": { "method": "DELETE", "url": "{{base_url}}/api/customers/{{customer_id}}?hard=true" }
+    },
+    {
+      "name": "11. Statistics (bonus dashboard)",
+      "request": { "method": "GET", "url": "{{base_url}}/api/customers/stats" }
+    },
+    {
+      "name": "12. Export CSV (bonus)",
+      "request": { "method": "GET", "url": "{{base_url}}/api/customers/export" }
+    },
+    {
+      "name": "13. Health check",
+      "request": { "method": "GET", "url": "{{base_url}}/health" }
+    }
+  ]
+}

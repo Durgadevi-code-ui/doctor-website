@@ -1,0 +1,861 @@
+:root {
+  /* Orange healthcare palette (v3.1.1 refinement - brighter, less
+     "muddy/brown" than the first orange pass). This admin theme is
+     unrelated to and untouched by the v3.2 dark redesign of the
+     public intake page below (see body.dark-intake).
+
+     This is still the theme used by the admin login/OTP/dashboard
+     pages (app/templates/admin_*.html) - untouched by the v3.2 dark
+     redesign below, which is scoped only to the public intake page
+     via the .dark-intake class on that page's <body>. */
+  --bg: #FFF7ED;
+  --panel: #FFFFFF;
+  --panel-raise: #FFEDD5;
+  --light-orange: #FFEDD5;
+  --text-primary: #1F2937;
+  --text-secondary: #78716C;
+  --primary: #F97316;
+  --primary-rgb: 249, 115, 22;
+  --primary-deep: #C2410C;
+  --teal: #FB923C;
+  --success: #16794F;
+  --success-bg: #ECFDF3;
+  --error: #C53030;
+  --error-bg: #FDECEC;
+  --line: rgba(31, 41, 55, 0.09);
+  --line-strong: rgba(31, 41, 55, 0.16);
+  --shadow: 0 1px 2px rgba(31, 20, 10, 0.05), 0 1px 3px rgba(31, 20, 10, 0.07);
+  --shadow-raised: 0 4px 10px rgba(31, 20, 10, 0.07), 0 2px 4px rgba(31, 20, 10, 0.06);
+}
+
+/* ==================================================================
+   v3.2: dark "Brand Orange on near-black" theme for the public
+   AMCANA Meet intake page. Scoped entirely to `body.dark-intake`
+   (only applied in app/templates/index.html) so admin_login.html,
+   admin_otp.html, and admin_dashboard.html keep the original light
+   theme above completely untouched - they never carry this class.
+
+   Because every component rule in this file already reads its colors
+   from these custom properties (var(--bg), var(--primary), etc.),
+   this single block re-themes the whole intake page - buttons, cards,
+   inputs, chips, checkboxes, the progress bar, banners, and the
+   success screen - with no per-component edits required. */
+body.dark-intake {
+  --bg: #050505;
+  --panel: #121212;
+  --panel-raise: #1C1C1C;
+  --light-orange: #3A2210;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A3A3A3;
+  --primary: #FF6B00;
+  --primary-rgb: 255, 107, 0;
+  --primary-deep: #CC5500;
+  --teal: #FF8C42;
+  --success: #34D399;
+  --success-bg: rgba(52, 211, 153, 0.12);
+  --error: #F87171;
+  --error-bg: rgba(248, 113, 113, 0.14);
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.22);
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --shadow-raised: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 107, 0, 0.10);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==================================================================
+   v3.2: single centered-column public page layout (replaces the
+   prior two-column shell/brand-panel/form-panel split). Everything
+   below lives inside <div class="page-content"> in index.html.
+   ================================================================== */
+
+.page-content {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 3rem;
+}
+@media (max-width: 640px) {
+  .page-content { padding: 2.5rem 1.1rem 2rem; }
+}
+
+/* v3.1: the Three.js scene is a single, fixed, full-page background
+   (stays in place through the entire scroll regardless of layout -
+   pointer-events: none guarantees it never intercepts clicks). */
+.hero-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+/* Two soft, slow-drifting glow spheres behind the header content -
+   pure CSS, no JS/GPU cost beyond a cheap blurred radial-gradient. */
+.top-section {
+  position: relative;
+  text-align: center;
+  padding-top: 1rem;
+}
+.top-section::before,
+.top-section::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: -1;
+  pointer-events: none;
+  animation: floatGlow 14s ease-in-out infinite;
+}
+.top-section::before {
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(var(--primary-rgb), 0.4), transparent 70%);
+  top: -60px;
+  left: 50%;
+  transform: translateX(-70%);
+}
+.top-section::after {
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(255, 140, 66, 0.32), transparent 70%);
+  top: 20px;
+  left: 50%;
+  transform: translateX(30%);
+  animation-delay: 4s;
+}
+@keyframes floatGlow {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-18px) scale(1.06); }
+}
+
+.logo-row-center {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.4rem;
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.4rem;
+}
+
+.logo-placeholder {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+/* The logo badge is larger and centered on the public intake page
+   than in the admin nav/auth contexts, which still use the 34px
+   .logo-placeholder size above. */
+.top-section .logo-placeholder {
+  width: 84px;
+  height: 84px;
+  box-shadow: 0 0 0 6px rgba(var(--primary-rgb), 0.16), 0 0 40px rgba(var(--primary-rgb), 0.35);
+}
+/* v3.1: real Agentic Atoms logo now in place (see .atom-logo/.logo-img
+   below) - this base .logo-placeholder rule still supplies the round
+   frame/sizing/glow ring for it. */
+.atom-logo {
+  background: var(--primary);
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.18);
+  overflow: hidden;
+  padding: 0;
+}
+/* Official Agentic Atoms logo (app/static/images/agentic-atoms-mark.png).
+   Fills the circular .logo-placeholder frame completely; object-fit:
+   cover crops any excess rather than squashing the image out of
+   proportion, so it's never stretched or distorted at any size. */
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.brand-mark {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.brand-mark span { color: #FDBA74; }
+
+.main-heading {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+/* The "Atoms" half of the brand reads in the accent orange, echoing
+   the .brand-mark span treatment used in the admin nav/auth pages. */
+.main-heading .accent { color: var(--primary); }
+
+.sub-heading {
+  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0 0 0.9rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+/* Orange underline accent, per the "use orange for highlights,
+   underline, glow" requirement. */
+.sub-heading::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 64px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 999px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.7);
+}
+
+.supporting-text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 46ch;
+  margin: 0 auto 1.8rem;
+}
+
+/* Compact feature strip - the "left side" marketing content, moved
+   to the top area per the layout requirement, as a slim row of pill
+   badges rather than a large card grid so it stays subordinate to
+   the heading/subheading/form hierarchy. */
+.feature-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 2.4rem;
+}
+.feature-pill {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: highlightIn 0.5s ease forwards;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.feature-pill:hover {
+  border-color: var(--primary);
+  background: rgba(var(--primary-rgb), 0.08);
+}
+.feature-pill:nth-child(1) { animation-delay: 0.05s; }
+.feature-pill:nth-child(2) { animation-delay: 0.12s; }
+.feature-pill:nth-child(3) { animation-delay: 0.19s; }
+.feature-pill:nth-child(4) { animation-delay: 0.26s; }
+@keyframes highlightIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: #FDBA74;
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #C9B79E;
+  margin-top: 0.45rem;
+}
+
+.form-wrap {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: formEnter 0.7s ease forwards;
+  animation-delay: 0.15s;
+}
+@keyframes formEnter {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modern card-style form, centered, with a subtle orange border/glow
+   per the "single centered form" requirement - replaces the prior
+   split-layout .form-panel/.form-card pairing. */
+.form-card {
+  background: var(--panel);
+  border-radius: 16px;
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-raised);
+  padding: 2.25rem 2.25rem 2.5rem;
+  max-width: 640px;
+  margin: 0 auto;
+}
+@media (max-width: 560px) {
+  .form-card { padding: 1.5rem 1.25rem 1.75rem; border-radius: 14px; }
+}
+
+.lede {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-align: center;
+  margin: 0 auto 1.6rem;
+  max-width: 52ch;
+}
+
+.page-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 2.5rem;
+  padding-top: 1.4rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+/* Progress bar */
+/* v3.1.3: made sticky so the indicator stays visible for the whole
+   scroll through the form (previously scrolled away with the rest of
+   .form-card's content - it's the tallest element on the page, so
+   losing the progress indicator midway through a long form was a
+   real usability problem, not just a cosmetic one). Also hardened
+   the left-position with explicit `order` values so the label can
+   never end up visually on the right regardless of any other rule
+   that touches flex ordering. */
+.progress-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.6rem;
+  padding: 0.65rem 0.05rem;
+  background: rgba(5, 5, 5, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.progress-label {
+  order: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  text-align: left;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+.progress-track {
+  order: 1;
+  flex: 1;
+  height: 8px;
+  background: var(--panel-raise);
+  border: 0.5px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+@media (max-width: 560px) {
+  .progress-wrap { top: 0; padding: 0.55rem 0.05rem; }
+  .progress-label { font-size: 0.68rem; }
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--teal));
+  border-radius: 999px;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-fill.complete {
+  animation: progressPulse 0.6s ease;
+}
+@keyframes progressPulse {
+  0% { box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0.35); }
+  100% { box-shadow: 0 0 0 8px rgba(var(--primary-rgb), 0); }
+}
+#progress-percent {
+  transition: color 0.3s ease;
+  font-weight: 600;
+  color: var(--primary);
+  display: inline-block;
+}
+
+.banner {
+  display: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 1.4rem;
+  border: 0.5px solid var(--line);
+}
+.banner.show { display: block; animation: fadeSlideIn 0.25s ease; }
+.banner.success {
+  background: var(--success-bg);
+  border-color: rgba(22, 121, 79, 0.3);
+  color: var(--success);
+}
+.banner.error {
+  background: var(--error-bg);
+  border-color: rgba(197, 48, 48, 0.3);
+  color: var(--error);
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Each fieldset reads as its own Google-Forms-style card section */
+.form-card-section {
+  border: none;
+  padding: 1.4rem 0;
+  margin: 0;
+  border-bottom: 0.5px solid var(--line);
+  opacity: 0;
+  transform: translateY(6px);
+  animation: sectionIn 0.4s ease forwards;
+}
+.form-card-section:first-of-type { padding-top: 0; }
+.form-card-section:last-of-type { border-bottom: none; padding-bottom: 0.6rem; }
+.form-card-section:nth-of-type(1) { animation-delay: 0.05s; }
+.form-card-section:nth-of-type(2) { animation-delay: 0.1s; }
+.form-card-section:nth-of-type(3) { animation-delay: 0.15s; }
+.form-card-section:nth-of-type(4) { animation-delay: 0.2s; }
+.form-card-section:nth-of-type(5) { animation-delay: 0.25s; }
+
+@keyframes sectionIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+legend {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.9rem;
+  padding: 0;
+  font-weight: 600;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 560px) {
+  .row { grid-template-columns: 1fr; }
+}
+
+.field { margin-bottom: 1rem; }
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+  color: var(--text-primary);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+/* v3.2: dark intake page needs a dark input fill (the shared rule
+   above stays #FFFFFF for the admin pages, unaffected). */
+body.dark-intake input[type="text"],
+body.dark-intake input[type="email"],
+body.dark-intake input[type="tel"],
+body.dark-intake input[type="number"],
+body.dark-intake select,
+body.dark-intake textarea {
+  background: var(--panel-raise);
+}
+
+textarea { resize: vertical; min-height: 70px; }
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.16);
+}
+
+input.invalid, select.invalid {
+  border-color: var(--error);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23C53030' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 6l8 8M14 6l-8 8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 15px;
+  padding-right: 2.3rem;
+}
+input.invalid:focus, select.invalid:focus {
+  box-shadow: 0 0 0 3px rgba(197, 48, 48, 0.16);
+}
+
+/* "Validation icons" requirement: a lightweight, honest touch - a
+   green check appears once a required field passes native HTML5
+   validity (see attachValidationIcons() in script.js), a red X
+   reuses the existing .invalid state above. This is deliberately
+   simple (native checkValidity(), not a bespoke rules engine) since
+   the authoritative validation is still the backend's
+   app/utils/validators.py - these icons are UX feedback only. */
+input.valid, select.valid {
+  border-color: var(--success);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2316794F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 10.5l3.2 3.2L15 6.8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 15px;
+  padding-right: 2.3rem;
+}
+
+.field-error {
+  display: none;
+  color: var(--error);
+  font-size: 0.78rem;
+  margin: 0.35rem 0 0;
+}
+.field-error.show { display: block; animation: fadeSlideIn 0.2s ease; }
+
+/* Chip group (single-select: pain point) */
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.chip {
+  border: 1px solid var(--line-strong);
+  background: #FFFFFF;
+  color: var(--text-primary);
+  border-radius: 999px;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.83rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+body.dark-intake .chip {
+  background: var(--panel-raise);
+}
+.chip:hover { border-color: var(--primary); }
+.chip.selected {
+  background: var(--primary);
+  border-color: var(--primary-deep);
+  color: #FFFFFF;
+}
+
+/* Checkbox-chip group (multi-select: interested services) */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.checkbox-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.checkbox-chip input[type="checkbox"] {
+  width: auto;
+  accent-color: var(--primary);
+  margin: 0;
+}
+.checkbox-chip.selected {
+  background: var(--primary);
+  border-color: var(--primary-deep);
+  color: #FFFFFF;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.submit-btn:hover { background: var(--primary-deep); }
+.submit-btn:active { transform: scale(0.99); }
+.submit-btn:disabled { opacity: 0.85; cursor: not-allowed; }
+
+.submit-spinner {
+  display: none;
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+}
+.submit-btn.is-loading .submit-spinner {
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.required-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.6rem;
+  text-align: center;
+}
+
+/* Success screen */
+.success-screen {
+  text-align: center;
+  padding: 2.5rem 1rem 1rem;
+  animation: fadeSlideIn 0.3s ease;
+}
+.success-mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--success-bg);
+  color: var(--success);
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.1rem;
+  animation: successPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes successPop {
+  from { transform: scale(0.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.success-screen h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+.success-sub {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  margin-bottom: 1.6rem;
+}
+
+/* ---------- Records dashboard ---------- */
+
+.table-section {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--panel);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 1.8rem 2.25rem 2.1rem;
+}
+@media (max-width: 560px) {
+  .table-section { padding: 1.4rem 1.1rem 1.6rem; }
+}
+
+.table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.table-head h3 {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.table-actions { display: flex; gap: 0.5rem; }
+
+.refresh-btn {
+  background: #FFFFFF;
+  border: 1px solid var(--line-strong);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.refresh-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+.toolbar {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.2rem;
+}
+@media (max-width: 700px) {
+  .toolbar { grid-template-columns: 1fr; }
+}
+.toolbar input, .toolbar select {
+  padding: 0.55rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+thead th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--line-strong);
+  background: var(--panel-raise);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 0.5px solid var(--line);
+  color: var(--text-primary);
+  vertical-align: top;
+}
+
+tbody tr.record-row { cursor: pointer; }
+tbody tr.record-row:hover td { background: var(--panel-raise); }
+
+tr.detail-row td {
+  background: var(--panel-raise);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+tr.detail-row .detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.6rem;
+}
+tr.detail-row .detail-grid b { color: var(--text-primary); display: block; font-weight: 600; }
+
+.empty-row {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 1.4rem;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 0;
+}
+.delete-btn:hover { color: var(--error); }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+.pagination button {
+  background: #FFFFFF;
+  border: 1px solid var(--line-strong);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.pagination button:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Respect reduced-motion preferences: disable the decorative
+   entrance/pulse animations, keep instant state changes only. */
+@media (prefers-reduced-motion: reduce) {
+  .feature-pill,
+  .form-card-section,
+  .form-wrap,
+  .banner.show,
+  .field-error.show,
+  .success-screen,
+  .success-mark,
+  .progress-fill.complete {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .progress-fill { transition: none !important; }
+}

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic Atoms — AMCANA Meet Intake Form</title>
+<meta name="description" content="Agentic Atoms intake form for the AMCANA Meet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32.png') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dark-intake">
+
+<!-- Three.js renders into this canvas; see initHeroScene() in
+     static/js/script.js. Falls back to the CSS background/glow
+     behind it if Three.js fails to load (e.g. CDN blocked). -->
+<canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
+
+<div class="page-content">
+
+  <header class="top-section" id="top-section">
+    <div class="logo-row-center">
+      <div class="logo-placeholder atom-logo" aria-hidden="true">
+        <img src="{{ url_for('static', filename='images/agentic-atoms-mark.png') }}" alt="Agentic Atoms logo" class="logo-img">
+      </div>
+    </div>
+
+    <h1 class="main-heading">Agentic <span class="accent">Atoms</span></h1>
+    <p class="sub-heading">AMCANA Meet Intake Form</p>
+    <p class="supporting-text">Tell us about your practice and we'll follow up with a plan built around your call volume.</p>
+
+    <div class="feature-strip" id="highlight-cards">
+      <span class="feature-pill">30-Day Deployment</span>
+      <span class="feature-pill">AI Receptionist</span>
+      <span class="feature-pill">AI Chatbot</span>
+      <span class="feature-pill">Custom Solutions</span>
+    </div>
+  </header>
+
+  <main class="form-wrap">
+    <div class="form-card" id="form-card">
+
+      <div id="form-body">
+        <p class="lede">All required fields are marked with *. We'll flag it here if this email or contact number is already registered.</p>
+
+        <div class="progress-wrap" aria-hidden="true">
+          <div class="progress-label">Step <span id="progress-percent">1</span> / 4</div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="banner" id="banner" role="alert" aria-live="polite"></div>
+
+        <form id="customer-form" novalidate>
+          <fieldset class="form-card-section">
+            <legend>Whom We're Talking To</legend>
+            <div class="row">
+              <div class="field">
+                <label for="customer_name">Your Name *</label>
+                <input type="text" id="customer_name" maxlength="150" autocomplete="name" required>
+                <p class="field-error" id="err-customer_name"></p>
+              </div>
+              <div class="field">
+                <label for="customer_role">Your Role</label>
+                <select id="customer_role">
+                  <option value="Doctor" selected>Doctor</option>
+                  <option value="Owner">Owner</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Director">Director</option>
+                </select>
+                <p class="field-error" id="err-customer_role"></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="phone_number">Phone Number *</label>
+                <input type="tel" id="phone_number" placeholder="(555) 123-4567" maxlength="20" autocomplete="tel" required>
+                <p class="field-error" id="err-phone_number"></p>
+              </div>
+              <div class="field">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" placeholder="name@practice.com" maxlength="255" autocomplete="email" required>
+                <p class="field-error" id="err-email"></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-card-section">
+            <legend>Practice Information</legend>
+            <div class="row">
+              <div class="field">
+                <label for="business_name">Business / Practice Name *</label>
+                <input type="text" id="business_name" maxlength="200" required>
+                <p class="field-error" id="err-business_name"></p>
+              </div>
+              <div class="field">
+                <label for="practice_type">Practice Type *</label>
+                <select id="practice_type" required>
+                  <option value="">Select One</option>
+                  <option>Medical Practice</option>
+                  <option>Medical Spa</option>
+                  <option>Dental Practice</option>
+                  <option>Orthodontics</option>
+                  <option>Other</option>
+                </select>
+                <p class="field-error" id="err-practice_type"></p>
+              </div>
+            </div>
+            <div class="field" id="practice_type_other_wrap" hidden>
+              <label for="practice_type_other">Please Specify Your Practice *</label>
+              <input type="text" id="practice_type_other" maxlength="150">
+              <p class="field-error" id="err-practice_type_other"></p>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="specialty">Specialty *</label>
+                <select id="specialty" required>
+                  <option value="">Select One</option>
+                  <option>General Physician</option>
+                  <option>Cardiologist</option>
+                  <option>Neurologist</option>
+                  <option>Dermatologist</option>
+                  <option>Psychiatrist</option>
+                  <option>Orthodontist</option>
+                  <option>Dentist</option>
+                  <option>ENT Specialist</option>
+                  <option>Pediatrician</option>
+                  <option>Ophthalmologist</option>
+                  <option>Orthopedic Surgeon</option>
+                  <option>Gynecologist</option>
+                  <option>Urologist</option>
+                  <option>Gastroenterologist</option>
+                  <option>Pulmonologist</option>
+                  <option>Oncologist</option>
+                  <option>Endocrinologist</option>
+                  <option>Nephrologist</option>
+                  <option>Family Medicine</option>
+                  <option>Internal Medicine</option>
+                  <option>Other</option>
+                </select>
+                <p class="field-error" id="err-specialty"></p>
+              </div>
+              <div class="field">
+                <label for="locations">Number Of Practice Locations</label>
+                <input type="number" id="locations" min="1" step="1" placeholder="e.g. 1">
+                <p class="field-error" id="err-locations"></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-card-section">
+            <legend>Business Information</legend>
+            <div class="field">
+              <label>Biggest Front-Desk Pain Point *</label>
+              <div class="chip-group" id="pain-group">
+                <div class="chip" data-value="Too many missed calls">Too Many Missed Calls</div>
+                <div class="chip" data-value="High call volume">High Call Volume</div>
+                <div class="chip" data-value="Appointment scheduling">Appointment Scheduling</div>
+                <div class="chip" data-value="Patient follow-ups">Patient Follow-Ups</div>
+                <div class="chip" data-value="Lead management">Lead Management</div>
+                <div class="chip" data-value="Lead generation">Lead Generation</div>
+                <div class="chip" data-value="Staff shortage">Staff Shortage</div>
+                <div class="chip" data-value="After-hours calls">After-Hours Calls</div>
+                <div class="chip" data-value="Other">Other</div>
+              </div>
+              <p class="field-error" id="err-pain_point"></p>
+            </div>
+            <div class="field">
+              <label for="daily_calls">Approximately How Many Calls Does Your Front Desk Receive Each Day?</label>
+              <input type="number" id="daily_calls" min="0" step="1" placeholder="e.g. 40">
+              <p class="field-error" id="err-daily_calls"></p>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-card-section">
+            <legend>Interested Services</legend>
+            <div class="field">
+              <label>Select All That Apply *</label>
+              <div class="checkbox-group" id="service-group">
+                <label class="chip checkbox-chip">
+                  <input type="checkbox" value="AI Receptionist">
+                  <span>AI Receptionist</span>
+                </label>
+                <label class="chip checkbox-chip">
+                  <input type="checkbox" value="AI Chatbot">
+                  <span>AI Chatbot</span>
+                </label>
+                <label class="chip checkbox-chip">
+                  <input type="checkbox" value="Custom App">
+                  <span>Custom App</span>
+                </label>
+                <label class="chip checkbox-chip">
+                  <input type="checkbox" value="Website Enhancement">
+                  <span>Website Enhancement</span>
+                </label>
+              </div>
+              <p class="field-error" id="err-interested_service"></p>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-card-section">
+            <legend>Anything Else</legend>
+            <div class="field">
+              <label for="additional_notes">Additional Notes</label>
+              <textarea id="additional_notes" maxlength="5000" placeholder="Current phone system, EHR, timeline, budget range..."></textarea>
+              <p class="field-error" id="err-additional_notes"></p>
+            </div>
+          </fieldset>
+
+          <button type="submit" class="submit-btn" id="submit-btn">
+            <span class="submit-btn-label">Submit</span>
+            <span class="submit-spinner" aria-hidden="true"></span>
+          </button>
+          <p class="required-note">* Required field.</p>
+        </form>
+      </div>
+
+      <div class="success-screen" id="success-screen" hidden>
+        <div class="success-mark" aria-hidden="true">✅</div>
+        <h3>Thank You!</h3>
+        <p class="success-sub">Your information has been received successfully.</p>
+        <button class="submit-btn" id="success-reset-btn" type="button">Add Another Customer</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <span>Agentic Atoms</span>
+    <span>AMCANA Meet · 2026</span>
+  </footer>
+</div>
+
+<!-- Three.js and GSAP (with ScrollTrigger) via CDN - see
+     static/js/script.js for the lightweight background scene + scroll
+     reveals built on top of them. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</body>
+</html>

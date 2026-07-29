@@ -1,0 +1,45 @@
+# docker-compose.yml
+# --------------------
+# Bonus feature: spins up the Flask app AND a PostgreSQL container
+# together, for a one-command local environment.
+#
+# Usage:
+#   cp .env.example .env      # then edit .env as needed
+#   docker compose up --build
+#
+# The app will be reachable at http://localhost:8000
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: customer_management
+    ports:
+      - "5432:5432"
+    volumes:
+      - customer_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      FLASK_APP: run.py
+      FLASK_ENV: production
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-.env}
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/customer_management
+    ports:
+      - "8000:8000"
+
+volumes:
+  customer_db_data:

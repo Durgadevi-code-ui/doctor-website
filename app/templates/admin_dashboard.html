@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Agentic Atoms</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32.png') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-dashboard-body">
+
+<header class="admin-topbar">
+  <div class="logo-row">
+    <div class="logo-placeholder atom-logo" aria-hidden="true">
+      <img src="{{ url_for('static', filename='images/agentic-atoms-mark.png') }}" alt="" class="logo-img">
+    </div>
+    <div class="brand-mark">Agentic<span>Atoms</span></div>
+  </div>
+  <div class="admin-topbar-right">
+    <span class="admin-username">{{ admin_username }}</span>
+    <button id="logout-btn" class="refresh-btn" type="button">Log Out</button>
+  </div>
+</header>
+
+<main class="admin-main">
+  <div class="admin-stats-row">
+    <div class="admin-stat-card">
+      <div class="stat-value" id="stat-total">—</div>
+      <div class="stat-label">Total Customers</div>
+    </div>
+    <div class="admin-stat-card">
+      <div class="stat-value" id="stat-today">—</div>
+      <div class="stat-label">Today's Registrations</div>
+    </div>
+  </div>
+
+  <div class="table-section admin-table-section">
+    <div class="table-head">
+      <h3>Customer Records</h3>
+      <div class="table-actions">
+        <a class="refresh-btn" href="/admin/api/customers/export" id="export-btn">Export CSV</a>
+        <button class="refresh-btn" id="refresh-btn" type="button">Refresh</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="search-input" placeholder="Search name, business, phone, or email…">
+      <select id="filter-specialty">
+        <option value="">All specialties</option>
+      </select>
+      <select id="filter-service">
+        <option value="">All services</option>
+        <option value="AI Receptionist">AI Receptionist</option>
+        <option value="AI Chatbot">AI Chatbot</option>
+        <option value="Custom App">Custom App</option>
+        <option value="Website Enhancement">Website Enhancement</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table id="customer-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Business</th>
+            <th>Specialty</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Interested In</th>
+            <th>Added</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="customer-table-body">
+          <tr><td colspan="9" class="empty-row">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+</main>
+
+<!-- Edit modal -->
+<div class="admin-modal-backdrop" id="edit-modal-backdrop" hidden>
+  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+    <div class="admin-modal-head">
+      <h3 id="edit-modal-title">Edit Customer</h3>
+      <button type="button" class="admin-modal-close" id="edit-modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="banner" id="edit-banner" role="alert"></div>
+    <form id="edit-form">
+      <input type="hidden" id="edit_customer_id">
+      <div class="row">
+        <div class="field">
+          <label for="edit_customer_name">Name</label>
+          <input type="text" id="edit_customer_name" required>
+        </div>
+        <div class="field">
+          <label for="edit_business_name">Business</label>
+          <input type="text" id="edit_business_name" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="edit_phone_number">Phone</label>
+          <input type="tel" id="edit_phone_number" required>
+        </div>
+        <div class="field">
+          <label for="edit_email">Email</label>
+          <input type="email" id="edit_email" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="edit_practice_type">Practice type</label>
+          <input type="text" id="edit_practice_type" required>
+        </div>
+        <div class="field">
+          <label for="edit_specialty">Specialty</label>
+          <input type="text" id="edit_specialty" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="edit_pain_point">Pain point</label>
+        <input type="text" id="edit_pain_point" required>
+      </div>
+      <div class="field">
+        <label for="edit_interested_service">Interested service(s)</label>
+        <input type="text" id="edit_interested_service" required>
+      </div>
+      <div class="field">
+        <label for="edit_additional_notes">Notes</label>
+        <textarea id="edit_additional_notes"></textarea>
+      </div>
+      <button type="submit" class="submit-btn">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>
